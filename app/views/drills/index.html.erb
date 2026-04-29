@@ -1,0 +1,94 @@
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+<div style="text-align: center; margin-top: 30px; font-family: 'Hiragino Kaku Gothic ProN', sans-serif;">
+  <div style="margin-bottom: 20px;">
+    <div style="font-size: 1.5rem; font-weight: bold; color: #ff9800;">Lv. <span id="level">1</span> 算数マスター</div>
+    <div style="width: 300px; height: 20px; background: #eee; border-radius: 10px; margin: 10px auto; overflow: hidden; border: 2px solid #ff9800;">
+      <div id="exp-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #ffeb3b, #ff9800); transition: width 0.3s;"></div>
+    </div>
+    <div style="font-size: 0.9rem; color: #666;">次のレベルまであと: <span id="next-exp">5</span> EXP</div>
+  </div>
+
+  <div style="margin-bottom: 20px; font-size: 1.2rem; display: flex; justify-content: center; gap: 20px;">
+    <div style="background: #fff; padding: 5px 15px; border-radius: 10px; border: 2px solid #ff9800;">
+      のこり: <span id="timer" style="color: #f44336; font-weight: bold;">30</span> 秒
+    </div>
+    <div style="background: #fff; padding: 5px 15px; border-radius: 10px; border: 2px solid #ff9800;">
+      今回: <span id="score" style="color: #4caf50; font-weight: bold;">0</span> 問
+    </div>
+  </div>
+
+  <div id="game-area" style="background: #fff8e1; padding: 30px; border-radius: 30px; display: inline-block; box-shadow: 0 10px 20px rgba(0,0,0,0.1); min-width: 350px;">
+    <p style="font-size: 3.5rem; margin: 0; font-weight: bold;">
+      <span id="num1">?</span> <span id="operator" style="color: #f44336;">?</span> <span id="num2">?</span> ＝ ？
+    </p>
+    <div style="margin-top: 20px;">
+      <input type="number" id="answerInput" style="font-size: 2.5rem; padding: 10px; border-radius: 15px; border: 5px solid #ff9800; text-align: center; width: 150px; outline: none;">
+    </div>
+  </div>
+
+  <div id="result-screen" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); color: white; justify-content: center; align-items: center; flex-direction: column; z-index: 100;">
+    <h2 id="result-title" style="font-size: 3rem; color: #ffeb3b;">TIME UP!</h2>
+    <p style="font-size: 5rem; font-weight: bold;"><span id="final-score">0</span> 問正解！</p>
+    <button onclick="location.reload()" style="padding: 15px 40px; font-size: 1.5rem; border-radius: 50px; background: #ff9800; color: white; border: none; cursor: pointer;">もういちど</button>
+  </div>
+</div>
+
+<script>
+  let collectAnswer, score = 0, timeLeft = 30, gameStarted = false;
+  let level = 1, currentExp = 0, nextLevelExp = 5;
+
+  function generateQuestion() {
+    const operators = ['＋', '－', '×', '÷'];
+    const op = operators[Math.floor(Math.random() * operators.length)];
+    let n1, n2;
+    if (op === '＋') { n1 = Math.floor(Math.random() * 20) + 1; n2 = Math.floor(Math.random() * 20) + 1; collectAnswer = n1 + n2; }
+    else if (op === '－') { n1 = Math.floor(Math.random() * 20) + 10; n2 = Math.floor(Math.random() * n1) + 1; collectAnswer = n1 - n2; }
+    else if (op === '×') { n1 = Math.floor(Math.random() * 9) + 1; n2 = Math.floor(Math.random() * 9) + 1; collectAnswer = n1 * n2; }
+    else if (op === '÷') { n2 = Math.floor(Math.random() * 9) + 1; collectAnswer = Math.floor(Math.random() * 9) + 1; n1 = n2 * collectAnswer; }
+    document.getElementById('num1').innerText = n1;
+    document.getElementById('num2').innerText = n2;
+    document.getElementById('operator').innerText = op;
+    document.getElementById('answerInput').value = "";
+    document.getElementById('answerInput').focus();
+  }
+
+  function updateExp() {
+    currentExp++;
+    if (currentExp >= nextLevelExp) {
+      level++;
+      currentExp = 0;
+      nextLevelExp = Math.floor(nextLevelExp * 1.5);
+      confetti({ particleCount: 200, spread: 100, origin: { y: 0.3 }, colors: ['#ffffff', '#ffeb3b'] });
+      // レベルアップの瞬間だけちょっと時間を止める演出もアリ
+    }
+    document.getElementById('level').innerText = level;
+    document.getElementById('exp-bar').style.width = (currentExp / nextLevelExp * 100) + "%";
+    document.getElementById('next-exp').innerText = nextLevelExp - currentExp;
+  }
+
+  document.getElementById('answerInput').addEventListener('input', (e) => {
+    if (!gameStarted && e.target.value !== "") {
+      gameStarted = true;
+      let timerId = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timer').innerText = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(timerId);
+          document.getElementById('final-score').innerText = score;
+          document.getElementById('result-screen').style.display = 'flex';
+          confetti({ particleCount: 300, spread: 150 });
+        }
+      }, 1000);
+    }
+    if (parseInt(e.target.value) === collectAnswer) {
+      score++;
+      document.getElementById('score').innerText = score;
+      updateExp();
+      confetti({ particleCount: 30, spread: 40, origin: { y: 0.9 } });
+      generateQuestion();
+    }
+  });
+
+  generateQuestion();
+</script>
