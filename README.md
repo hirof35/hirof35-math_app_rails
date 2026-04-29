@@ -1,24 +1,41 @@
-# README
+# 🚀 爆速さんすうタイムアタック
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+算数の四則演算をゲーム感覚で学べる、Rails 8ベースのWebアプリケーションです。
+正解するたびに星が舞い、経験値を貯めてレベルアップするRPG要素を取り入れています。
 
-Things you may want to cover:
+## ✨ 主な機能
 
-* Ruby version
+- **四則演算クイズ**: ＋, －, ×, ÷ の問題をランダムに生成。
+- **タイムアタック**: 30秒間で何問解けるか挑戦！
+- **レベルシステム**: 正解するごとにEXPを獲得し、レベルアップ。
+- **パーティクル演出**: `canvas-confetti` を使用した、爽快な正解エフェクト。
+- **スマート入力**: わり算の余りが出ない設計や、ひき算の負数回避など、学習者に優しいロジック。
 
-* System dependencies
+## 🛠 使用技術
 
-* Configuration
+- **Ruby on Rails 8**
+- **JavaScript (Vanilla JS / Stimulus)**
+- **HTML / CSS**
+- **canvas-confetti** (演出ライブラリ)
 
-* Database creation
+## 🏃‍♂️ 起動方法
 
-* Database initialization
+1. リポジトリをクローン
+   ```bash
+   git clone [あなたのリポジトリURL]
+依存関係のインストール
 
-* How to run the test suite
+Bash
+bundle install
+サーバー起動
 
-* Services (job queues, cache servers, search engines, etc.)
+Bash
+rails s
+ブラウザで http://localhost:3000 にアクセス！
 
-* Deployment instructions
+💡 こだわりポイント
+ユーザー体験 (UX): 20問以上解ける上級者でもストレスなく遊べるよう、正解後の自動フォーカスやスムーズな画面遷移を実装しました。
 
-* ...
+確実な動作: 開発環境に左右されにくい安定したJavaScriptの読み込み構成を採用しています。
+
+Produced with passion for Math & Code! 🌟
