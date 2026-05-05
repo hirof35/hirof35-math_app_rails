@@ -39,3 +39,4 @@ rails s
 確実な動作: 開発環境に左右されにくい安定したJavaScriptの読み込み構成を採用しています。
 
 Produced with passion for Math & Code! 🌟
+<img width="1914" height="1084" alt="スクリーンショット 2026-05-06 081316" src="https://github.com/user-attachments/assets/a708ed5e-ce53-47f4-9e57-3175a88e6e65" />
